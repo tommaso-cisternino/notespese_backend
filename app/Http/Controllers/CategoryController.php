@@ -28,6 +28,6 @@ class CategoryController extends Controller
             return response()->json(["category" => null,"error" => $exception->getMessage()],500);
         }
 
-        return response()->json(["category" => $category],201);
+        return response()->json(["category" => $category->refresh()],201);
     }
 }

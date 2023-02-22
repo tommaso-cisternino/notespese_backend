@@ -11,8 +11,9 @@ Route::get('refresh',[AuthController::class,'refresh']);
 Route::get('logout',[AuthController::class,'logout']);
 Route::get('user',[AuthController::class,'user']);
 
-Route::get('category',[CategoryController::class,'index'])->middleware('auth');
-Route::post('category',[CategoryController::class,'create'])->middleware('auth');
+Route::get('categories/',[CategoryController::class,'index'])->middleware('auth');
+Route::post('categories/',[CategoryController::class,'create'])->middleware('auth');
 
-Route::get('movement',[MovementController::class,'index'])->middleware('auth');
-Route::post('movement',[MovementController::class,'create'])->middleware('auth');
+Route::get('movements/',[MovementController::class,'index'])->middleware('auth');
+Route::post('movements/',[MovementController::class,'create'])->middleware('auth');
+Route::delete('movements/{id}',[MovementController::class,'delete'])->middleware('auth');
