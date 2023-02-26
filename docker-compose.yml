@@ -45,8 +45,8 @@ services:
     security_opt:
       - seccomp:unconfined
     environment:
-      MYSQL_DATABASE: notespese_be
-      MYSQL_username: root
+      MYSQL_DATABASE: notespese
+      MYSQL_USERNAME: root
       MYSQL_ROOT_PASSWORD: root
       SERVICE_TAGS: dev
       SERVICE_NAME: mysql
