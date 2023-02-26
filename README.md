@@ -5,11 +5,14 @@ This project is based on Laravel 9 and provides some APIs for authenticate users
 ## BASIC INSTALLATION
 Install and configure
 - Apache
-- MySQL DB
+- MySQL
 
 Create a new database named notespese
 
-Set values to DB ENV VARIABLES in .env if needed.
+In .env set the following VARIABLE:
+DB_HOST=127.0.0.1
+
+If you need you can edit DB_USERNAME and DB_PASSWORD too.
 
 Run via terminal:
 'composer install'
@@ -17,4 +20,7 @@ Run via terminal:
 'php artisan serve --port 4000'
 
 ## INSTALLATION WITH DOCKER
-Run  docker-compose up -d --build or docker run
+In .env set the following VARIABLE:
+DB_HOST=db
+then run
+docker-compose up -d --build
