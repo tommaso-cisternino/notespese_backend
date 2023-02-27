@@ -30,4 +30,18 @@ class CategoryController extends Controller
 
         return response()->json(["category" => $category->refresh()],201);
     }
+
+
+    public function delete(Request $request){
+
+        $category = Category::findOrFail($request->id);
+
+        if ($category->user_id === auth()->user()->id){
+            $category->delete();
+        }else{
+            return response()->json(["message" => "Forbidden"],401);
+        }
+
+        return response()->json(["message" => "Category deleted"],204);
+    }
 }
