@@ -2,15 +2,15 @@ version: '3'
 services:
 
   #PHP Service
-  app:
+  notespese_app:
     build:
       context: .
       dockerfile: Dockerfile.local
-    container_name: app
+    container_name: notespese_app
     restart: unless-stopped
     tty: true
     environment:
-      SERVICE_NAME: app
+      SERVICE_NAME: notespese_app
       SERVICE_TAGS: dev
     working_dir: /var/www
     volumes:
@@ -20,13 +20,13 @@ services:
       - app-network
 
   #Nginx Service
-  webserver:
+  notespese_webserver:
     image: nginx:alpine
-    container_name: webserver
+    container_name: notespese_webserver
     restart: unless-stopped
     tty: true
     ports:
-      - "8000:80"
+      - "4000:80"
       #- "4443:443"
     volumes:
       - ./:/var/www
@@ -35,9 +35,9 @@ services:
       - app-network
 
   #MySQL Service
-  db:
+  notespese_db:
     image: mysql:8.0
-    container_name: db
+    container_name: notespese_db
     restart: unless-stopped
     tty: true
     ports:
@@ -56,16 +56,16 @@ services:
     networks:
       - app-network
 
-  phpmyadmin:
+  notespese_phpmyadmin:
     depends_on:
-      - db
+      - notespese_db
     image: phpmyadmin/phpmyadmin
-    container_name: phpmyadmin
+    container_name: notespese_phpmyadmin
     restart: always
     ports:
       - 9089:80
     environment:
-      PMA_HOST: db
+      PMA_HOST: notespese_db
       PMA_USER: root
       PMA_PASSWORD: root
       MYSQL_ROOT_PASSWORD: root
