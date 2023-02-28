@@ -26,7 +26,7 @@ After this run via terminal:
 	php artisan jwt:secret 
 	php artisan serve  
 
-## INSTALLATION WITH DOCKER
+## INSTALLATION WITH DOCKER(may give some permission problems in some Linux distros,I'm fixing dockerfile)
 In **.env.example** set the following VARIABLE:
 
 	DB_HOST=notespese_db 
