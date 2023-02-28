@@ -25,10 +25,10 @@ After this run via terminal:
 	php artisan jwt:secret 
 	php artisan serve  
 
-## INSTALLATION WITH DOCKER (may give some permission problems,I'm fixing dockerfile)
-In **.env** set the following VARIABLE:
+## INSTALLATION WITH DOCKER
+In **.env.example** set the following VARIABLE:
 
-	DB_HOST=db  
+	DB_HOST=notespese_db 
 then run
 
 	docker-compose up -d --build

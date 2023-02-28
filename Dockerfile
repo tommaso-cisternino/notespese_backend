@@ -29,27 +29,16 @@ RUN docker-php-ext-install gd
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Add user for laravel application
+
 RUN groupadd -g 1000 www
 RUN useradd -u 1000 -ms /bin/bash -g www www
 
 # Copy existing application directory contents
 COPY . /var/www
-
-# Copy existing application directory permissions
-RUN chown -R www:www /var/www
-
-# Change current user to www
+COPY --chown=www:www . /var/www
+RUN chown -vhR www:www /var/www
 USER www
-
-CMD bash -c "composer install"
-
-COPY .env.example .env
-
-CMD php artisan migrate --force
-CMD php artisan jwt:secret
-
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000
 
-CMD bash -c "php artisan key:generate && php artisan cache:clear && php-fpm"
+CMD bash -c "composer install && cp .env.example .env && php artisan key:generate && php artisan migrate && php artisan jwt:secret && mkdir -p storage/framework/cache/data/ && php artisan cache:clear && php-fpm"
