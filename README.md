@@ -9,23 +9,23 @@ Install and configure
 - Apache
 - MySQL
 
-Create a new database named notespese
+Create a new database named **_notespese_**
 
-In .env set the following VARIABLE:
+In **.env** set the following VARIABLE:
 
     DB_HOST=127.0.0.1  
 
 
-If you need you can edit DB_USERNAME and DB_PASSWORD too.
+If you need you can edit _**DB_USERNAME**_ and _**DB_PASSWORD**_ too.
 
-Run via terminal:
+After this run via terminal:
 
     composer install  
 	php artisan jwt:secret 
 	php artisan serve  
 
 ## INSTALLATION WITH DOCKER (may give some permission problems,I'm fixing dockerfile)
-In .env set the following VARIABLE:
+In **.env** set the following VARIABLE:
 
 	DB_HOST=db  
 then run
