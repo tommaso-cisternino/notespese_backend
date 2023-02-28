@@ -32,6 +32,20 @@ class CategoryController extends Controller
     }
 
 
+    public function update(Request $request){
+
+        $category = Category::findOrFail($request->id);
+
+        if ($category->user_id === auth()->user()->id){
+            $category->name = $request->name;
+            $category->save();
+        }else{
+            return response()->json(["message" => "Forbidden"],401);
+        }
+
+        return response()->json(["message" => "Category updated", "category" => $category],200);
+    }
+
     public function delete(Request $request){
 
         $category = Category::findOrFail($request->id);

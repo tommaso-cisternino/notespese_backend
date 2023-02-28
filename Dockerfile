@@ -1,58 +1,55 @@
-# Build Stage 1
-# Compile Composer dependencies
-FROM composer AS composer
+FROM php:8.1-fpm
+
+# Copy composer.lock and composer.json
+COPY composer.lock composer.json /var/www/
+
+# Set working directory
 WORKDIR /var/www
+
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libfreetype6-dev \
+    locales \
+    zip \
+    vim \
+    unzip \
+    git \
+    curl && \
+    rm -rf /var/lib/apt/lists/*
+
+
+# Clear cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Install extensions
+RUN docker-php-ext-install pdo pdo_mysql
+RUN docker-php-ext-install gd
+
+# Install composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Add user for laravel application
+RUN groupadd -g 1000 www
+RUN useradd -u 1000 -ms /bin/bash -g www www
+
+# Copy existing application directory contents
 COPY . /var/www
 
+# Copy existing application directory permissions
+RUN chown -R www:www /var/www
 
-RUN composer install --ignore-platform-reqs --no-interaction --no-dev --prefer-dist --optimize-autoloader
+# Change current user to www
+USER www
 
-# Build Stage 2
-# PHP Alpine image, we install Apache on top of it
-FROM alpine:3.14
+CMD bash -c "composer install"
 
-# Concatenated RUN commands
-RUN apk add --no-cache zip unzip imagemagick libzip-dev libpng-dev libxml2-dev libmcrypt-dev curl gnupg apache2 \
-     php7 php7-imagick php7-apache2 php7-mbstring php7-session php7-json php7-openssl php7-tokenizer php7-pdo php7-pdo_mysql php7-fileinfo php7-ctype \
-     php7-xmlreader php7-xmlwriter php7-xml php7-simplexml php7-gd php7-bcmath php7-zip php7-dom php7-posix php7-calendar libc6-compat libstdc++ supervisor\
-    && mkdir -p /run/apache2 \
-    && rm  -rf /tmp/*
+COPY .env.example .env
 
-# Apache configuration
-COPY /.docker/apache.conf /etc/apache2/conf.d
+CMD php artisan migrate --force
+CMD php artisan jwt:secret
 
-# Make supervisor log directory
-RUN mkdir -p /var/log/supervisor
+# Expose port 9000 and start php-fpm server
+EXPOSE 9000
 
-ARG BUILDTIME_NODE_ENV
-# Copy local supervisord.conf to the conf.d directory
-COPY --chown=root:root /source/supervisord-${BUILDTIME_NODE_ENV}.conf /etc/supervisor/conf.d/supervisord.conf
-
-# custom commands
-COPY source/queue-worker.conf /etc/supervisor/conf.d/queue-worker.conf
-COPY source/task-scheduler.conf /etc/supervisor/conf.d/task-scheduler.conf
-
-#RUN chown -vhR www:www /var/log
-
-# PHP configuration
-#RUN wget https://elasticache-downloads.s3.amazonaws.com/ClusterClient/PHP-7.3/latest-64bit
-#RUN tar -zxvf latest-64bit
-#RUN mv amazon-elasticache-cluster-client.so /usr/lib/php7/modules/
-COPY /.docker/00_php.ini /etc/php7/conf.d
-
-# Script permission
-
-ADD /.docker/docker-entrypoint-${BUILDTIME_NODE_ENV}.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
-
-# Copy app files
-WORKDIR /var/www
-COPY . /var/www
-
-#copy vendor artifacts
-COPY --from=composer /var/www/vendor/ /var/www/vendor/
-
-# Run script
-EXPOSE 80
-
-ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD bash -c "php artisan key:generate && php artisan cache:clear && php-fpm"

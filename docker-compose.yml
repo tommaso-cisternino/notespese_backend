@@ -5,9 +5,9 @@ services:
   notespese_app:
     build:
       context: .
-      dockerfile: Dockerfile.local
+      dockerfile: Dockerfile
     container_name: notespese_app
-    restart: unless-stopped
+    restart: "unless-stopped"
     tty: true
     environment:
       SERVICE_NAME: notespese_app
@@ -23,10 +23,10 @@ services:
   notespese_webserver:
     image: nginx:alpine
     container_name: notespese_webserver
-    restart: unless-stopped
+    restart: "no"
     tty: true
     ports:
-      - "4000:80"
+      - "8000:80"
       #- "4443:443"
     volumes:
       - ./:/var/www
@@ -38,7 +38,7 @@ services:
   notespese_db:
     image: mysql:8.0
     container_name: notespese_db
-    restart: unless-stopped
+    restart: "no"
     tty: true
     ports:
       - "3306:3306"
@@ -61,7 +61,7 @@ services:
       - notespese_db
     image: phpmyadmin/phpmyadmin
     container_name: notespese_phpmyadmin
-    restart: always
+    restart: "no"
     ports:
       - 9089:80
     environment:

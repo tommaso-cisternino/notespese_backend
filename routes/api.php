@@ -13,6 +13,7 @@ Route::get('user',[AuthController::class,'user']);
 
 Route::get('categories/',[CategoryController::class,'index'])->middleware('auth');
 Route::post('categories/',[CategoryController::class,'create'])->middleware('auth');
+Route::patch('categories/{id}',[CategoryController::class,'update'])->middleware('auth');
 Route::delete('categories/{id}',[CategoryController::class,'delete'])->middleware('auth');
 
 Route::get('movements/',[MovementController::class,'index'])->middleware('auth');
