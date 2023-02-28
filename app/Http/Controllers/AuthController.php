@@ -31,7 +31,10 @@ class AuthController extends Controller
         $request->validate([
             'email' => 'email|unique:users|required',
             'username' => 'unique:users|required',
-            'password' => 'confirmed|required',
+            "password" =>
+                'min:8|required_with:password_confirmation|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%.#%^€<>£*?&])[A-Za-z\d@$!%*?.#%^€<>£&]{8,}$/',
+            "password_confirmation" =>
+                "required|min:8|same:password|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%.#%^€<>£*?&])[A-Za-z\d@$!%*?.#%^€<>£&]{8,}$/",
         ]);
 
         $user = new User();
