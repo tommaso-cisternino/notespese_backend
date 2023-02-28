@@ -21,6 +21,7 @@ If you need you can edit _**DB_USERNAME**_ and _**DB_PASSWORD**_ too.
 After this run via terminal:
 
     composer install  
+    php artisan migrate
 	php artisan jwt:secret 
 	php artisan serve  
 
