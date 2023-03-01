@@ -38,6 +38,7 @@ class CategoryController extends Controller
 
         if ($category->user_id === auth()->user()->id){
             $category->name = $request->name;
+            $category->color = $request->color;
             $category->save();
         }else{
             return response()->json(["message" => "Forbidden"],401);
